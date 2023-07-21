@@ -1,0 +1,1 @@
+model_path = r"D:\pretrained_model\yolov8\yolov8s.onnx"
