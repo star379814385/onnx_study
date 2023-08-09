@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <getopt.h>
+// #include <getopt.h>
 
-#include <opencv2/opencv.hpp>
+// #include <opencv2/opencv.hpp>
 
 #include "inference.h"
 
@@ -11,7 +11,7 @@ using namespace cv;
 
 int main(int argc, char **argv)
 {
-    std::string projectBasePath = "/home/user/ultralytics"; // Set your ultralytics base path
+    // std::string projectBasePath = "/home/user/ultralytics"; // Set your ultralytics base path
 
     bool runOnGPU = true;
 
@@ -24,11 +24,18 @@ int main(int argc, char **argv)
     //
 
     // Note that in this example the classes are hard-coded and 'classes.txt' is a place holder.
-    Inference inf(projectBasePath + "/yolov8s.onnx", cv::Size(640, 480), "classes.txt", runOnGPU);
+    // Inference inf(projectBasePath + "/yolov8s.onnx", cv::Size(640, 480), "classes.txt", runOnGPU);
+    Inference inf(
+        "D:/code/inference_web/server/models/yolov8n.onnx", 
+        cv::Size(640, 640), 
+        "", 
+        runOnGPU
+    );
 
     std::vector<std::string> imageNames;
-    imageNames.push_back(projectBasePath + "/ultralytics/assets/bus.jpg");
-    imageNames.push_back(projectBasePath + "/ultralytics/assets/zidane.jpg");
+    imageNames.push_back("D:/code/mmdetection/demo/demo.jpg");
+    // imageNames.push_back(projectBasePath + "/ultralytics/assets/bus.jpg");
+    // imageNames.push_back(projectBasePath + "/ultralytics/assets/zidane.jpg");
 
     for (int i = 0; i < imageNames.size(); ++i)
     {
