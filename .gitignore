@@ -160,3 +160,8 @@ cython_debug/
 #.idea/
 
 *.onnx
+*.dll
+*.lib
+*.pdb
+*.exe
+*/build/*
