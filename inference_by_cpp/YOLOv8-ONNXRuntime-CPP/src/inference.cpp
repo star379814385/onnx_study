@@ -79,6 +79,7 @@ char* DCSP_CORE::CreateSession(DCSP_INIT_PARAM &iParams)
 			//OrtOpenVINOProviderOptions ovOption;
 			//sessionOption.AppendExecutionProvider_OpenVINO(ovOption);
 		}
+		//开启图优化
 		sessionOption.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 		sessionOption.SetIntraOpNumThreads(iParams.IntraOpNumThreads);
 		sessionOption.SetLogSeverityLevel(iParams.LogSeverityLevel);
@@ -89,6 +90,7 @@ char* DCSP_CORE::CreateSession(DCSP_INIT_PARAM &iParams)
 		const wchar_t* modelPath = wide_cstr;
 		session = new Ort::Session(env, modelPath, sessionOption);
 		Ort::AllocatorWithDefaultOptions allocator;
+		// 获取输入输出节点名称
 		size_t inputNodesNum = session->GetInputCount();
 		for (size_t i = 0; i < inputNodesNum; i++)
 		{
@@ -136,12 +138,16 @@ char* DCSP_CORE::RunSession(cv::Mat &iImg, std::vector<DCSP_RESULT>& oResult)
 
 	char* Ret = RET_OK;
 	cv::Mat processedImg;
+	//预处理（为什么用Postprocess命名呢？）
+	// 直接放缩，转RGB
 	PostProcess(iImg, imgSize, processedImg);
 	if (modelType < 4)
 	{
+		// UINT8 -> FLOAT32 
 		float* blob = new float[processedImg.total() * 3];
 		BlobFromImage(processedImg, blob);
 		std::vector<int64_t> inputNodeDims = { 1,3,imgSize.at(0),imgSize.at(1) };
+		// 推断
 		TensorProcess(starttime_1, iImg, blob, inputNodeDims, oResult);
 	}
 
@@ -152,6 +158,7 @@ char* DCSP_CORE::RunSession(cv::Mat &iImg, std::vector<DCSP_RESULT>& oResult)
 template<typename N>
 char* DCSP_CORE::TensorProcess(clock_t& starttime_1, cv::Mat& iImg, N& blob, std::vector<int64_t>& inputNodeDims,  std::vector<DCSP_RESULT>& oResult)
 {
+	
 	Ort::Value inputTensor = Ort::Value::CreateTensor<std::remove_pointer<N>::type>(Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU), blob, 3 * imgSize.at(0) * imgSize.at(1), inputNodeDims.data(), inputNodeDims.size());
 #ifdef benchmark
 	clock_t starttime_2 = clock();

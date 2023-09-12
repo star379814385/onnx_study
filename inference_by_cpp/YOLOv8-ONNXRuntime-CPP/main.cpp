@@ -43,6 +43,7 @@ int main()
 	std::string model_path = "D:/code/inference_web/server/models/yolov8n.onnx";
 	// std::string model_path = "D:/pretrained_model/yolov8/yolov8s.onnx";
 	DCSP_INIT_PARAM params{ model_path, YOLO_ORIGIN_V8, {640, 640}, 80, 0.1, 0.5, false };
+	// 初始化
 	char* ret = p1->CreateSession(params);
 	file_iterator(p1);
 	return 0;

@@ -4,6 +4,7 @@ project(Yolov8CPPInference VERSION 0.1)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY D:/code/onnx_study/inference_by_cpp/YOLOv8-CPP-Inference/output)
 
+# 如果设置为 ON，则在构建过程中自动将当前处理的 CMakeLists.txt 所在的目录添加到包含路径中。
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
